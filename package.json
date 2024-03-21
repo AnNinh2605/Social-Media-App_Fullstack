@@ -15,9 +15,12 @@
     "@babel/preset-env": "7.15.4",
     "body-parse": "^0.1.0",
     "dotenv": "^16.4.5",
-    "express": "4.17.2"
+    "express": "4.17.2",
+    "mysql2": "^3.9.2",
+    "sequelize": "^6.37.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.6.2"
   }
 }
