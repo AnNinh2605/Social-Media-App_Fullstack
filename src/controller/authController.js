@@ -1,14 +1,28 @@
 import authService from '../service/authService.js'
 
-const loginController = (req, res) => {
-    res.send('Login')
+const loginController = async (req, res) => {
+    try {
+        let data = await authService.loginService(req.body);
+        if (data) {
+            return res.status(200).json({
+                EM: data.EM,
+                EC: data.EC,
+                DT: ''
+            })
+        }
+    } catch (e) {
+        return res.status(500).json({
+            EM: 'Something wrong in server',
+            EC: 5,
+            DT: ''
+        })
+    }
 }
-
 const logoutController = (req, res) => {
     res.send('logout')
 }
 
-const registerController = async(req, res) => {
+const registerController = async (req, res) => {
     try {
         let { email, username, password } = req.body;
         if (!email || !username || !password) {
@@ -41,4 +55,5 @@ const registerController = async(req, res) => {
         })
     }
 }
+
 module.exports = { loginController, logoutController, registerController }

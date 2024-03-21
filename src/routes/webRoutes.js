@@ -6,10 +6,10 @@ router.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-router.get('/login', authController.loginController)
+router.post('/login', authController.loginController)
 
-router.get('/logout', authController.logoutController)
+router.post('/logout', authController.logoutController)
 
-router.get('/register', authController.registerController)
+router.post('/register', authController.registerController)
 
 module.exports = router

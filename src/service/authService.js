@@ -1,3 +1,9 @@
+import db from '../models/index.js'
+import bcrypt from 'bcryptjs';
+const salt = bcrypt.genSaltSync(10);
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 const findEmail = async (email) => {
     let result = await db.User.findOne({
         where: {
@@ -9,6 +15,7 @@ const findEmail = async (email) => {
     }
     return false;
 }
+
 const findPhone = async (phone) => {
     let result = await db.User.findOne({
         where: {
@@ -27,22 +34,16 @@ const hashPassword = (password) => {
 }
 
 const decryptPassword = (password, hashPassword) => {
-    return bcrypt.compareSync(password, hashPassword); // true
+    return bcrypt.compareSync(password, hashPassword);
 }
 
 const creatUseService = async (userData) => {
     try {
         let checkEmail = await findEmail(userData.email);
-        let checkPhone = await findPhone(userData.phone);
+
         if (checkEmail) {
             return ({
                 EM: "Email is existing",
-                EC: 2
-            })
-        }
-        if (checkPhone) {
-            return ({
-                EM: "Phone number is existing",
                 EC: 2
             })
         }
@@ -52,9 +53,6 @@ const creatUseService = async (userData) => {
                 email: userData.email,
                 username: userData.username,
                 password: hashPass,
-                phone: userData.phone,
-                address: '',
-                groupId: 4
             });
 
             return ({
@@ -65,10 +63,51 @@ const creatUseService = async (userData) => {
     } catch (e) {
         console.log("Error ", e)
         return ({
-            EM: 'Something wrong in server',
+            EM: 'Something wrong in service',
             EC: 5
         })
     }
 }
 
-module.exports = { creatUseService }
+const loginService = async (userData) => {
+    try {
+        let results = await db.User.findOne({
+            where: {
+                email: userData.email
+            },
+            raw: true
+        })
+        if (results) {
+            let dataPassword = results.password;
+            let checkMatchPassword = decryptPassword(userData.password, dataPassword)
+            if (checkMatchPassword === true) {
+                return ({
+                    EM: 'Login successfully',
+                    EC: '0',
+                    DT: ''
+                })
+            }
+            else {
+                return ({
+                    EM: 'Email/phone or password is wrong',
+                    EC: 3
+                })
+            }
+        }
+        else {
+            console.log("not found user with email/ phone: ", userData.value);
+            return ({
+                EM: 'Email or phone is not existing',
+                EC: 3
+            })
+        }
+    } catch (e) {
+        console.log("Error ", e)
+        return ({
+            EM: 'Something wrong in service',
+            EC: 5
+        })
+    }
+}
+
+module.exports = { creatUseService, loginService }
