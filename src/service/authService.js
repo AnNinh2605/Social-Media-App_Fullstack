@@ -1,8 +1,13 @@
 import db from '../models/index.js'
 import bcrypt from 'bcryptjs';
+import { createJWT } from '../middleware/JWTAction.js'
+import 'dotenv/config'
+
+
 const salt = bcrypt.genSaltSync(10);
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+
 
 const findEmail = async (email) => {
     let result = await db.User.findOne({
@@ -81,10 +86,18 @@ const loginService = async (userData) => {
             let dataPassword = results.password;
             let checkMatchPassword = decryptPassword(userData.password, dataPassword)
             if (checkMatchPassword === true) {
+                let payload = {
+                    email: userData.email,
+                    expiresIn: process.env.JWT_EXPIRESIN,
+                    data: ''
+                }
+                let token = createJWT(payload);
                 return ({
                     EM: 'Login successfully',
                     EC: '0',
-                    DT: ''
+                    DT: {
+                        accessToken: token
+                    }
                 })
             }
             else {
