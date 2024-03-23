@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Post)
-      User.hasMany(models.Comment)
-      User.hasMany(models.Story)
-      User.hasMany(models.Relationship)
-      User.hasMany(models.Like)
+      User.hasMany(models.Post, { foreignKey: 'userId' })
+      User.hasMany(models.Comment, { foreignKey: 'userId' })
+      User.hasMany(models.Story, { foreignKey: 'userId' })
+      User.hasMany(models.Relationship, { foreignKey: 'userId' })
+      User.hasMany(models.Like, { foreignKey: 'userId' })
 
     }
   }
