@@ -5,7 +5,7 @@ const loginController = async (req, res) => {
         let data = await authService.loginService(req.body);
         if (data) {
             //set jwt token for cookie 
-            res.cookie('jwt', data.DT.accessToken, { expires: new Date(Date.now() + 900000), httpOnly: true })
+            res.cookie('jwt', data.DT.accessToken, { expires: new Date(Date.now() + 9000000), httpOnly: true })
             
             return res.status(200).json({
                 EM: data.EM,

@@ -15,8 +15,10 @@ configCORS(app);
 
 app.use(cookieParser());
 // cookies parse
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
 
 // check connection to DB
 // connectionDB();
