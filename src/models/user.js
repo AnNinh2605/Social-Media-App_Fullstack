@@ -14,9 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post, { foreignKey: 'userId' })
       User.hasMany(models.Comment, { foreignKey: 'userId' })
       User.hasMany(models.Story, { foreignKey: 'userId' })
-      User.hasMany(models.Relationship, { foreignKey: 'userId' })
       User.hasMany(models.Like, { foreignKey: 'userId' })
-
     }
   }
   User.init({

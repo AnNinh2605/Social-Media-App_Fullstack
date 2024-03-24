@@ -78,7 +78,7 @@ const loginService = async (userData) => {
     try {
         let results = await db.User.findOne({
             where: {
-                email: userData.email
+                username: userData.username
             },
             raw: true
         })
@@ -87,7 +87,8 @@ const loginService = async (userData) => {
             let checkMatchPassword = decryptPassword(userData.password, dataPassword)
             if (checkMatchPassword === true) {
                 let payload = {
-                    email: userData.email,
+                    email: results.email,
+                    id: results.id,
                     expiresIn: process.env.JWT_EXPIRESIN,
                     data: ''
                 }
@@ -96,6 +97,7 @@ const loginService = async (userData) => {
                     EM: 'Login successfully',
                     EC: '0',
                     DT: {
+                        data: results,
                         accessToken: token
                     }
                 })
@@ -103,15 +105,16 @@ const loginService = async (userData) => {
             else {
                 return ({
                     EM: 'Email/phone or password is wrong',
-                    EC: 3
+                    EC: 3,
+                    DT: ''
                 })
             }
         }
         else {
-            console.log("not found user with email/ phone: ", userData.value);
             return ({
-                EM: 'Email or phone is not existing',
-                EC: 3
+                EM: 'User is not existing',
+                EC: 3,
+                DT: ''
             })
         }
     } catch (e) {
